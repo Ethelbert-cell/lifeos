@@ -2,6 +2,21 @@
 
 ---
 
+### [2026-03-27 14:17]
+**Task:** > Create `.env.local` with all required environment variable values supplied by user.
+
+**Changes:**
+* `.env.local` (new): Contains `NEXTAUTH_URL`, `NEXTAUTH_SECRET`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `MONGODB_URI`, `NEXT_PUBLIC_APP_URL`. MONGODB_URI corrected to include `/lifeos` database name before query string.
+* `.gitignore` verified: `.env*.local` pattern on line 29 confirmed — file is **never committed**. `git check-ignore` test: ✅ PASS.
+
+**Logic/Math:** No XP logic. MONGODB_URI format: `mongodb+srv://<user>:<pass>@<cluster>/<dbname>?<options>` — the `/lifeos` segment tells Mongoose which database to use, matching `connectDB()` in `db.ts`.
+
+**Testing:** ✅ `git check-ignore -v .env.local` confirms file is ignored by `.gitignore:29:.env*.local`.
+
+**Phase Progress:** Phase 1 — Task 6 (Configure .env.local) complete. Ready to proceed to Task 7 (Mongoose models) and Task 8 (NextAuth route).
+
+---
+
 ### [2026-03-27 13:13]
 **Task:** > Initialize LifeOS project — Phase 1, Tasks 2–4: Scaffold Next.js 14, install all dependencies, build full folder structure, create Phase 1 stub files, and document all required environment variables.
 
