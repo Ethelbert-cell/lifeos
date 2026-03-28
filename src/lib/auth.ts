@@ -12,8 +12,8 @@ async function getUserModel() {
 export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
     }),
   ],
 
@@ -34,9 +34,9 @@ export const authOptions: NextAuthOptions = {
 
         if (!existingUser) {
           await User.create({
-            email: user.email,
-            name: user.name,
-            image: user.image,
+            email: user.email || "no-reply@unknown.com",
+            name: user.name || "Anonymous User",
+            image: user.image || "",
             xp: 0,
             streak: 0,
             lastActiveDate: null,

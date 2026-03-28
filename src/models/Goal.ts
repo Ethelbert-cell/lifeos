@@ -10,6 +10,7 @@ export interface IGoal extends Document {
   title: string;
   description?: string;
   status: 'active' | 'completed';
+  category: 'personal' | 'health' | 'career' | 'learning' | 'finance';
   progress: number;
   milestones: IMilestone[];
   targetDate?: Date;
@@ -34,6 +35,11 @@ const GoalSchema = new Schema<IGoal>(
       type: String,
       enum: ['active', 'completed'],
       default: 'active',
+    },
+    category: {
+      type: String,
+      enum: ['personal', 'health', 'career', 'learning', 'finance'],
+      default: 'personal',
     },
     progress: { type: Number, default: 0, min: 0, max: 100 },
     milestones: { type: [MilestoneSchema], default: [] },

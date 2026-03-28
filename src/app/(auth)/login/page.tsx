@@ -1,10 +1,9 @@
-import Link from 'next/link';
-import { Metadata } from 'next';
+"use client";
 
-export const metadata: Metadata = {
-  title: 'Sign In',
-  description: 'Sign in to your LifeOS dashboard',
-};
+import { signIn } from 'next-auth/react';
+
+// Metadata is now removed because this is a client component ('use client').
+// We could move it to a layout.tsx, but for a simple login page this is fine.
 
 export default function LoginPage() {
   return (
@@ -21,8 +20,8 @@ export default function LoginPage() {
         </div>
 
         {/* Sign-in button — wired fully in Phase 1 Task 8 */}
-        <Link
-          href="/api/auth/signin/google"
+        <button
+          onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
           id="google-signin-btn"
           className="flex items-center justify-center gap-3 w-full py-3 px-5 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 transition-colors rounded-xl text-white font-semibold shadow-lg"
         >
@@ -33,7 +32,7 @@ export default function LoginPage() {
             />
           </svg>
           Continue with Google
-        </Link>
+        </button>
 
         <p className="mt-5 text-xs text-indigo-300/60">
           By signing in you agree to our{' '}
