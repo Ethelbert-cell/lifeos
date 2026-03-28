@@ -2,6 +2,58 @@
 
 ---
 
+### [2026-03-27 15:00]
+**Task:** > Complete Phase 2 API Layer: Implement remaining 6 CRUD routes with integrated XP gamification engine.
+
+**Changes:**
+* `src/app/api/tasks/route.ts` (new): Full CRUD. PATCH supports bulk Kanban order updates. If a task is completed, grants +25 XP via Mongoose `$inc`. Automatically deducts -25 XP if uncompleted or deleted after completion to prevent farming.
+* `src/app/api/habits/route.ts` (new): Full CRUD. PATCH handles check-ins: normalizes `completionLogs` array to midnight UTC, derives dynamic streaks using `date-fns`, grants +15 XP per check-in, and auto-adds +50 XP bonus on day 7, 14, 21 etc. (multiple of 7 algorithm).
+* `src/app/api/notes/route.ts` (new): Full CRUD. Handles Markdown string storage and pinned state. GET implements `?q=` searching leveraging MongoDB `$text` full-text search index sorted by `textScore`. Grants +10 XP atomic reward per note created.
+* `src/app/api/goals/route.ts` (new): Full CRUD. Implements progress tracker 0-100 logic. Dynamically calculates diff between `newMilestonesCompleted` and `oldMilestonesCompleted` to securely award +20 XP per milestone toggled. +100 XP awarded if goal status toggles to `completed`.
+* `src/app/api/user/route.ts` (new): Evaluates `lastActiveDate` against today/yesterday using `date-fns` to increment streak dynamically or reset it to 1. Awards +5 XP for daily login. Returns fresh `level` and `streak` parameters to override NextAuth stale session.
+* `src/app/api/dashboard/route.ts` (new): Implements complex MongoDB aggregation pipeline to count last-7-day task completion rates, query active habits, and prioritize closest `targetDate` upcoming goals. Returns single JSON payload to avoid frontend request spam.
+
+**Logic/Math:** Atomic `$inc` utilized for all XP modifications per GEMINI.md §3 constraint. `level` is always dynamically calculated via `levelFromXP()` algorithm (never stored statically).
+
+**Testing:** Unit tests (34/34) pass (`vitest`). TypeScript `noEmit` validation confirmed Mongoose model typing aligns safely with POST/PATCH requests.
+
+**Phase Progress:** Phase 2 (Backend API Layer) is now **100% Complete**. Ready to proceed to Phase 3 (Frontend UX/UI & State).
+
+---
+
+### [2026-03-27 14:41]
+**Task:** > Bugfix: Resolve NextAuth `404 CLIENT_FETCH_ERROR`. Prepare Phase 2 implementation plan.
+
+**Changes:**
+* `src/app/api/auth/` (modified): Renamed accidental literal directory `\[...nextauth\]` to Next.js dynamic directory `[...nextauth]`. 
+* Verified `/api/auth/session` now returns `{}` via local curl instead of 404 page.
+
+**Logic/Math:** None.
+
+**Testing:** 404 error eliminated from browser console. NextAuth is fully operational.
+
+**Phase Progress:** Still 100% Phase 1. Drafted Phase 2 implementation plan for user review.
+
+---
+
+### [2026-03-27 14:36]
+**Task:** > Complete Phase 1 Tasks 7 & 8: Create remaining Mongoose models and NextAuth API route.
+
+**Changes:**
+* `src/models/Task.ts` (new): Kanban task schema (status, priority, dueDate, order for DnD). Compound index on `{ userId, order }`.
+* `src/models/Habit.ts` (new): Habit schema (icon, color, frequency, streak strings, completionLogs array for date tracking).
+* `src/models/Note.ts` (new): Rich text note schema. Added MongoDB `$text` index on `{ title: 'text', plainText: 'text' }` for search capability.
+* `src/models/Goal.ts` (new): Goal schema with nested `MilestoneSchema` and numeric progress 0-100 tracker.
+* `src/app/api/auth/[...nextauth]/route.ts` (new): Exported GET and POST handlers from `NextAuth(authOptions)`. This suppresses the NextAuth `CLIENT_FETCH_ERROR 404` and enables the OAuth flow.
+
+**Logic/Math:** Habit streak computation relies on `completionLogs` array rather than static daily cron jobs. Milestone schema sub-documents generate unique `_id`s by default, making toggling individual milestone completions easier via API.
+
+**Testing:** ✅ `npx vitest run` executed. 34/34 tests passing. Models compile successfully against Mongoose 8.
+
+**Phase Progress:** Phase 1 (Foundation) is now **100% Complete**. Ready to proceed to Phase 2 (API Layer & CRUD operations).
+
+---
+
 ### [2026-03-27 14:17]
 **Task:** > Create `.env.local` with all required environment variable values supplied by user.
 
