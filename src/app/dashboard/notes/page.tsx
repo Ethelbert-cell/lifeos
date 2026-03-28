@@ -23,7 +23,7 @@ export default function NotesPage() {
 
   const handleCreateNote = async () => {
      try {
-         await createNote({ title: "", content: "", plainText: "", wordCount: 0 });
+         await createNote({ title: "New Note", content: "<p>Start writing here...</p>", plainText: "Start writing here...", wordCount: 3 });
          // Because createNote automatically fetches, the newly created note will be the first one (0 index generally)
          toast.success("Note created! +10 XP", { icon: '📝' });
          // We must delay slightly or immediately fetch the newest via local array, actually Zustand array updates immediately
@@ -82,7 +82,7 @@ export default function NotesPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search notes globally..."
-            className="w-full h-12 pl-12 pr-4 bg-card border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/50 shadow-sm"
+            className="w-full h-12 pl-12 pr-4 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/50 shadow-sm text-foreground"
          />
       </div>
 

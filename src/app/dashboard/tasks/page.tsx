@@ -1,3 +1,5 @@
+"use client";
+
 import { KanbanBoard } from "@/components/tasks/KanbanBoard";
 import { TaskModal } from "@/components/tasks/TaskModal";
 import { useState } from "react";

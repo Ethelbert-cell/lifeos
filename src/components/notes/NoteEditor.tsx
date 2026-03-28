@@ -27,6 +27,7 @@ export function NoteEditor({ note, onBack }: NoteEditorProps) {
   const editor = useEditor({
     extensions: [StarterKit],
     content: note?.content || "",
+    immediatelyRender: false,
     editorProps: {
       attributes: {
         class: 'prose prose-sm dark:prose-invert sm:prose-base focus:outline-none min-h-[500px] max-w-none w-full pb-32',

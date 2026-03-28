@@ -152,7 +152,7 @@ export function GoalModal({ goal, onClose }: GoalModalProps) {
                 <div className="grid grid-cols-2 gap-6 pt-2">
                     <div className="space-y-1.5">
                        <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Category</label>
-                       <select value={category} onChange={(e) => setCategory(e.target.value as any)} className="w-full h-10 px-3 bg-secondary rounded-lg border-transparent focus:ring-2 focus:ring-indigo-500 text-sm outline-none">
+                       <select value={category} onChange={(e) => setCategory(e.target.value as any)} className="w-full h-10 px-3 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm outline-none">
                           <option value="personal">Personal</option>
                           <option value="health">Health</option>
                           <option value="career">Career</option>
@@ -162,7 +162,7 @@ export function GoalModal({ goal, onClose }: GoalModalProps) {
                     </div>
                     <div className="space-y-1.5">
                        <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Target Date</label>
-                       <input type="date" value={targetDate} onChange={(e) => setTargetDate(e.target.value)} className="w-full h-10 px-3 bg-secondary rounded-lg border-transparent focus:ring-2 focus:ring-indigo-500 text-sm outline-none color-scheme-[dark]" />
+                       <input type="date" value={targetDate} onChange={(e) => setTargetDate(e.target.value)} className="w-full h-10 px-3 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm outline-none [color-scheme:dark]" />
                     </div>
                 </div>
             </div>
@@ -183,7 +183,7 @@ export function GoalModal({ goal, onClose }: GoalModalProps) {
                      placeholder="Add a milestone step..."
                      value={newMilestoneTitle}
                      onChange={(e) => setNewMilestoneTitle(e.target.value)}
-                     className="w-full h-10 pl-4 pr-10 bg-secondary rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                     className="w-full h-10 pl-4 pr-10 bg-white/5 border border-white/10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                   <button type="submit" disabled={!newMilestoneTitle.trim()} className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground disabled:opacity-50"><Plus className="w-4 h-4"/></button>
                </form>

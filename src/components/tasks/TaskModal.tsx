@@ -134,7 +134,7 @@ export function TaskModal({ task, initialStatus = "todo", onClose }: TaskModalPr
                 type="date"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
-                className="w-full h-10 px-3 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 color-scheme-[dark]"
+                className="w-full h-10 px-3 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 [color-scheme:dark]"
              />
           </div>
 
