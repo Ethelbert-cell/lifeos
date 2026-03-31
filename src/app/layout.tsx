@@ -24,6 +24,14 @@ export const metadata: Metadata = {
     description: 'Earn XP, level up, and hit your goals with LifeOS.',
     images: [{ url: '/og-image.png', width: 1200, height: 630 }],
   },
+  manifest: '/manifest.json',
+};
+
+export const viewport = {
+  themeColor: '#020617', // slate-950
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1, // Disable pinch zoom on inputs on mobile for app-like feel
 };
 
 export default function RootLayout({

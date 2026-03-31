@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import { INote } from '@/models/Note';
 
 interface NoteState {
@@ -12,7 +13,9 @@ interface NoteState {
   pinNote: (id: string, isPinned: boolean) => Promise<void>;
 }
 
-export const useNoteStore = create<NoteState>((set, get) => ({
+export const useNoteStore = create<NoteState>()(
+  persist(
+    (set, get) => ({
   notes: [],
   isLoading: false,
   error: null,
@@ -106,4 +109,4 @@ export const useNoteStore = create<NoteState>((set, get) => ({
       throw err;
     }
   }
-}));
+}), { name: 'lifeos-notes' }));

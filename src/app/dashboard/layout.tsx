@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { TopBar } from "@/components/layout/TopBar";
 import { Sidebar } from "@/components/layout/Sidebar";
+import { MobileNav } from "@/components/layout/MobileNav";
 import { LevelUpModal } from "@/components/gamification/LevelUpModal";
 
 export default async function DashboardLayout({
@@ -20,7 +21,7 @@ export default async function DashboardLayout({
     <div className="min-h-screen relative bg-background w-full">
       <Sidebar />
       <TopBar />
-      <main className="md:ml-64 p-6 overflow-x-hidden min-h-[calc(100vh-4rem)] relative">
+      <main className="md:ml-64 p-6 pb-24 md:pb-6 overflow-x-hidden min-h-[calc(100vh-4rem)] relative">
         {/* Ambient background glow inside dashboard */}
         <div className="absolute top-0 right-0 w-[40vw] h-[40vh] bg-indigo-500/5 rounded-full blur-[100px] pointer-events-none -translate-y-1/2 translate-x-1/2" />
         
@@ -28,6 +29,7 @@ export default async function DashboardLayout({
             {children}
         </div>
       </main>
+      <MobileNav />
       <LevelUpModal />
     </div>
   );

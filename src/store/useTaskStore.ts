@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import { ITask } from '@/models/Task';
 
 interface TaskState {
@@ -12,7 +13,9 @@ interface TaskState {
   bulkUpdateTasks: (updates: { _id: string; status: string; order: number }[]) => Promise<void>;
 }
 
-export const useTaskStore = create<TaskState>((set, get) => ({
+export const useTaskStore = create<TaskState>()(
+  persist(
+    (set, get) => ({
   tasks: [],
   isLoading: false,
   error: null,
@@ -111,4 +114,4 @@ export const useTaskStore = create<TaskState>((set, get) => ({
       throw err;
     }
   }
-}));
+}), { name: 'lifeos-tasks' }));

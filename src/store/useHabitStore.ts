@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import { IHabit } from '@/models/Habit';
 
 interface HabitState {
@@ -11,7 +12,9 @@ interface HabitState {
   deleteHabit: (id: string) => Promise<void>;
 }
 
-export const useHabitStore = create<HabitState>((set, get) => ({
+export const useHabitStore = create<HabitState>()(
+  persist(
+    (set, get) => ({
   habits: [],
   isLoading: false,
   error: null,
@@ -81,4 +84,4 @@ export const useHabitStore = create<HabitState>((set, get) => ({
       throw err;
     }
   }
-}));
+}), { name: 'lifeos-habits' }));

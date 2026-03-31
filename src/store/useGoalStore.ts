@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import { IGoal } from '@/models/Goal';
 
 interface GoalState {
@@ -11,7 +12,9 @@ interface GoalState {
   deleteGoal: (id: string) => Promise<void>;
 }
 
-export const useGoalStore = create<GoalState>((set, get) => ({
+export const useGoalStore = create<GoalState>()(
+  persist(
+    (set, get) => ({
   goals: [],
   isLoading: false,
   error: null,
@@ -79,4 +82,4 @@ export const useGoalStore = create<GoalState>((set, get) => ({
       throw err;
     }
   }
-}));
+}), { name: 'lifeos-goals' }));

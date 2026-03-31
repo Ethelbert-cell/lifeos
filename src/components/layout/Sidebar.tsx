@@ -2,8 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, CheckSquare, Target, BookText, ArrowLeftRight } from "lucide-react";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import { LayoutDashboard, CheckSquare, Target, BookText, ArrowLeftRight, Settings, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useUserStore } from "@/store/useUserStore";
+import { levelFromXP } from "@/lib/utils";
 
 const NAV_ITEMS = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -15,6 +19,9 @@ const NAV_ITEMS = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const { data: session } = useSession();
+  const { user } = useUserStore();
+  const level = user ? levelFromXP(user.xp) : 1;
 
   return (
     <aside className="fixed left-0 top-0 bottom-0 w-64 bg-card border-r border-white/5 hidden md:flex flex-col z-40">
@@ -50,17 +57,48 @@ export function Sidebar() {
             </Link>
           );
         })}
+
+        {/* Settings link */}
+        <Link
+          href="/dashboard/settings"
+          className={cn(
+            "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors mt-4 border-t border-white/5 pt-4",
+            pathname === "/dashboard/settings"
+              ? "bg-indigo-500/10 text-indigo-500 dark:text-indigo-400"
+              : "text-muted-foreground hover:bg-white/5 hover:text-foreground"
+          )}
+        >
+          <Settings className={cn("w-5 h-5", pathname === "/dashboard/settings" ? "text-indigo-500" : "opacity-70")} />
+          Settings
+        </Link>
       </nav>
 
-      {/* User Area Footer placeholder (will implement fully in Phase 4) */}
+      {/* User Footer — real data */}
       <div className="p-4 border-t border-white/5">
-        <div className="flex items-center gap-3 px-3 py-2">
-          <div className="w-8 h-8 rounded-full bg-indigo-500/20 shadow-inner flex items-center justify-center overflow-hidden">
-             <span className="text-xs font-semibold">ME</span>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-medium leading-none">Profile</span>
-            <span className="text-xs text-muted-foreground mt-1">Free Tier</span>
+        <div className="flex items-center gap-3 px-2 py-1.5 rounded-xl hover:bg-white/5 transition-colors cursor-default">
+          {session?.user?.image ? (
+            <Image
+              src={session.user.image}
+              alt="Avatar"
+              width={32}
+              height={32}
+              className="rounded-full ring-2 ring-indigo-500/30"
+            />
+          ) : (
+            <div className="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center">
+              <span className="text-xs font-bold text-indigo-300">
+                {session?.user?.name?.[0]?.toUpperCase() ?? "?"}
+              </span>
+            </div>
+          )}
+          <div className="flex flex-col min-w-0">
+            <span className="text-sm font-medium leading-none truncate">
+              {session?.user?.name?.split(" ")[0] ?? "User"}
+            </span>
+            <span className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
+              <Zap className="w-2.5 h-2.5 text-amber-400" />
+              Level {level}
+            </span>
           </div>
         </div>
       </div>
