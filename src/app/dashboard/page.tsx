@@ -60,6 +60,49 @@ export default function DashboardIndex() {
           </div>
        </header>
 
+       {/* Streak Banner */}
+       {(user.streak ?? 0) >= 3 && (
+         <div className="flex items-center gap-3 px-5 py-3.5 bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 rounded-2xl">
+           <span className="text-2xl">🔥</span>
+           <div>
+             <p className="font-semibold text-amber-400 text-sm">{user.streak}-Day Streak!</p>
+             <p className="text-xs text-muted-foreground">Keep showing up — you're on fire!</p>
+           </div>
+           <div className="ml-auto text-xs text-amber-500/70 font-medium">+50 XP at 7 days</div>
+         </div>
+       )}
+
+       {/* Today's Focus — top 3 pending tasks */}
+       {tasks.filter(t => t.status !== 'done').length > 0 && (
+         <div className="space-y-3">
+           <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Today's Focus</h2>
+           <div className="space-y-2">
+             {tasks
+               .filter(t => t.status !== 'done')
+               .sort((a, b) => {
+                 const pOrder = { high: 0, medium: 1, low: 2 };
+                 return (pOrder[a.priority as keyof typeof pOrder] ?? 1) - (pOrder[b.priority as keyof typeof pOrder] ?? 1);
+               })
+               .slice(0, 3)
+               .map(task => (
+                 <div key={String(task._id)} className="flex items-center gap-3 px-4 py-3 bg-card border border-border rounded-xl hover:border-primary/30 transition-colors group">
+                   <div className={cn("w-2 h-2 rounded-full shrink-0", {
+                     'bg-rose-400': task.priority === 'high',
+                     'bg-amber-400': task.priority === 'medium',
+                     'bg-slate-400': task.priority === 'low',
+                   })} />
+                   <p className="text-sm font-medium flex-1 truncate">{task.title}</p>
+                   <span className={cn("text-[10px] font-semibold px-2 py-0.5 rounded-full", {
+                     'bg-rose-500/10 text-rose-400': task.priority === 'high',
+                     'bg-amber-500/10 text-amber-400': task.priority === 'medium',
+                     'bg-slate-500/10 text-slate-400': task.priority === 'low',
+                   })}>{task.priority}</span>
+                 </div>
+             ))}
+           </div>
+         </div>
+       )}
+
        {/* Kpi Grid */}
        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <StatCard 
@@ -87,8 +130,8 @@ export default function DashboardIndex() {
        {/* Wide Action Links */}
        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
           
-          <Link href="/dashboard/tasks" className="p-6 rounded-2xl bg-card border border-white/5 shadow-sm hover:border-indigo-500/50 hover:bg-indigo-500/5 transition-all group flex items-start gap-4">
-             <div className="w-12 h-12 rounded-xl border border-white/10 flex items-center justify-center shrink-0 bg-background/50 text-indigo-400 group-hover:scale-110 group-hover:bg-indigo-500/20 transition-all">
+          <Link href="/dashboard/tasks" className="p-6 rounded-2xl bg-card border border-border shadow-sm hover:border-indigo-500/50 hover:bg-indigo-500/5 transition-all group flex items-start gap-4">
+             <div className="w-12 h-12 rounded-xl border border-border flex items-center justify-center shrink-0 bg-background text-indigo-400 group-hover:scale-110 group-hover:bg-indigo-500/20 transition-all">
                 <CheckSquare />
              </div>
              <div className="flex-1">
@@ -101,8 +144,8 @@ export default function DashboardIndex() {
              </div>
           </Link>
 
-          <Link href="/dashboard/habits" className="p-6 rounded-2xl bg-card border border-white/5 shadow-sm hover:border-emerald-500/50 hover:bg-emerald-500/5 transition-all group flex items-start gap-4">
-             <div className="w-12 h-12 rounded-xl border border-white/10 flex items-center justify-center shrink-0 bg-background/50 text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500/20 transition-all">
+          <Link href="/dashboard/habits" className="p-6 rounded-2xl bg-card border border-border shadow-sm hover:border-emerald-500/50 hover:bg-emerald-500/5 transition-all group flex items-start gap-4">
+             <div className="w-12 h-12 rounded-xl border border-border flex items-center justify-center shrink-0 bg-background text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500/20 transition-all">
                 <TrendingUp />
              </div>
              <div className="flex-1">
@@ -115,8 +158,8 @@ export default function DashboardIndex() {
              </div>
           </Link>
 
-          <Link href="/dashboard/notes" className="p-6 rounded-2xl bg-card border border-white/5 shadow-sm hover:border-cyan-500/50 hover:bg-cyan-500/5 transition-all group flex items-start gap-4">
-             <div className="w-12 h-12 rounded-xl border border-white/10 flex items-center justify-center shrink-0 bg-background/50 text-cyan-400 group-hover:scale-110 group-hover:bg-cyan-500/20 transition-all">
+          <Link href="/dashboard/notes" className="p-6 rounded-2xl bg-card border border-border shadow-sm hover:border-cyan-500/50 hover:bg-cyan-500/5 transition-all group flex items-start gap-4">
+             <div className="w-12 h-12 rounded-xl border border-border flex items-center justify-center shrink-0 bg-background text-cyan-400 group-hover:scale-110 group-hover:bg-cyan-500/20 transition-all">
                 <BookText />
              </div>
              <div className="flex-1">
@@ -129,8 +172,8 @@ export default function DashboardIndex() {
              </div>
           </Link>
           
-          <Link href="/dashboard/goals" className="p-6 rounded-2xl bg-card border border-white/5 shadow-sm hover:border-rose-500/50 hover:bg-rose-500/5 transition-all group flex items-start gap-4">
-             <div className="w-12 h-12 rounded-xl border border-white/10 flex items-center justify-center shrink-0 bg-background/50 text-rose-400 group-hover:scale-110 group-hover:bg-rose-500/20 transition-all">
+          <Link href="/dashboard/goals" className="p-6 rounded-2xl bg-card border border-border shadow-sm hover:border-rose-500/50 hover:bg-rose-500/5 transition-all group flex items-start gap-4">
+             <div className="w-12 h-12 rounded-xl border border-border flex items-center justify-center shrink-0 bg-background text-rose-400 group-hover:scale-110 group-hover:bg-rose-500/20 transition-all">
                 <Target />
              </div>
              <div className="flex-1">
@@ -151,7 +194,7 @@ export default function DashboardIndex() {
 // Micro Component
 function StatCard({ icon: Icon, title, value, subtitle, iconColor, iconBg }: any) {
   return (
-    <div className="bg-card border border-white/5 p-5 rounded-2xl shadow-sm hover:border-white/10 transition-colors">
+    <div className="bg-card border border-border p-5 rounded-2xl shadow-sm hover:border-border/60 transition-colors">
        <div className={cn("inline-flex p-2.5 rounded-xl mb-4", iconBg, iconColor)}>
           <Icon className="w-5 h-5" />
        </div>

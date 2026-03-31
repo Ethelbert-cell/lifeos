@@ -1,0 +1,22 @@
+{
+  // Disable VS Code's built-in CSS validator — it doesn't understand PostCSS/Tailwind
+  // directives like @tailwind, @apply, @layer. The Tailwind CSS IntelliSense extension
+  // handles validation correctly instead.
+  "css.validate": false,
+  "scss.validate": false,
+  "less.validate": false,
+
+  // Ensure .css files are treated as PostCSS (enables proper Tailwind IntelliSense)
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+
+  // Trigger IntelliSense inside className strings and cn() calls
+  "editor.quickSuggestions": {
+    "strings": "on"
+  },
+  "tailwindCSS.experimental.classRegex": [
+    ["cn\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["className\\s*=\\s*[\"'`]([^\"'`]*)[\"'`]"]
+  ]
+}

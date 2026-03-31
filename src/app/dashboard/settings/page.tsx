@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
+import { useTheme } from "next-themes";
 import { useUserStore } from "@/store/useUserStore";
 import { xpProgress } from "@/lib/utils";
 import { 
-  Download, LogOut, User, Shield, Zap, 
-  Trophy, CheckSquare, BookText, Target, ArrowLeftRight, Trash2,
-  AlertTriangle
+  Download, LogOut, User, Shield, Zap, Sun, Moon, Monitor,
+  Trophy, Trash2, AlertTriangle
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Image from "next/image";
@@ -28,8 +28,12 @@ function getTier(level: number) {
 export default function SettingsPage() {
   const { data: session } = useSession();
   const { user } = useUserStore();
+  const { theme, setTheme } = useTheme();
   const [isExporting, setIsExporting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  // Mounted guard: theme=undefined on server → active-button class mismatch → hydration crash
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   const xp = user?.xp ?? 0;
   const { level, currentXP, xpToNext, percent } = xpProgress(xp);
@@ -64,7 +68,7 @@ export default function SettingsPage() {
       </div>
 
       {/* ── Profile Card ── */}
-      <section className="bg-card border border-white/8 rounded-2xl p-6 flex items-center gap-6">
+      <section className="bg-card border border-border rounded-2xl p-6 flex items-center gap-6">
         {session?.user?.image ? (
           <Image
             src={session.user.image}
@@ -91,7 +95,7 @@ export default function SettingsPage() {
       </section>
 
       {/* ── XP Progress ── */}
-      <section className="bg-card border border-white/8 rounded-2xl p-6 space-y-4">
+      <section className="bg-card border border-border rounded-2xl p-6 space-y-4">
         <div className="flex items-center gap-2 mb-1">
           <Zap className="w-5 h-5 text-amber-400" />
           <h3 className="font-semibold">XP Progress</h3>
@@ -100,7 +104,7 @@ export default function SettingsPage() {
           <span>{currentXP.toLocaleString()} XP this level</span>
           <span>{xpToNext.toLocaleString()} XP to Level {level + 1}</span>
         </div>
-        <div className="w-full h-3 bg-white/5 rounded-full overflow-hidden">
+        <div className="w-full h-3 bg-muted rounded-full overflow-hidden">
           <div
             className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 transition-all duration-700"
             style={{ width: `${percent}%` }}
@@ -114,7 +118,7 @@ export default function SettingsPage() {
       </section>
 
       {/* ── Lifetime Stats ── */}
-      <section className="bg-card border border-white/8 rounded-2xl p-6 space-y-4">
+      <section className="bg-card border border-border rounded-2xl p-6 space-y-4">
         <h3 className="font-semibold flex items-center gap-2">
           <Trophy className="w-5 h-5 text-amber-400" /> Lifetime Activity
         </h3>
@@ -127,7 +131,7 @@ export default function SettingsPage() {
       </section>
 
       {/* ── Data Sovereignty ── */}
-      <section className="bg-card border border-white/8 rounded-2xl p-6 space-y-4">
+      <section className="bg-card border border-border rounded-2xl p-6 space-y-4">
         <h3 className="font-semibold">Your Data</h3>
         <p className="text-sm text-muted-foreground">
           Your data belongs to you. Export a full JSON backup of everything in your LifeOS account at any time.
@@ -142,13 +146,40 @@ export default function SettingsPage() {
         </button>
       </section>
 
+      {/* ── Appearance ── */}
+      <section className="bg-card border border-border rounded-2xl p-6 space-y-4">
+        <h3 className="font-semibold flex items-center gap-2">
+          <Sun className="w-5 h-5 text-amber-400" /> Appearance
+        </h3>
+        <p className="text-sm text-muted-foreground">Choose how LifeOS looks to you.</p>
+        <div className="flex gap-2">
+          {([
+            { value: "light", label: "Light", icon: Sun },
+            { value: "dark",  label: "Dark",  icon: Moon },
+            { value: "system",label: "System",icon: Monitor },
+          ] as const).map(({ value, label, icon: Icon }) => (
+            <button
+              key={value}
+              onClick={() => setTheme(value)}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-all ${
+                mounted && theme === value
+                  ? "bg-indigo-500 text-white border-indigo-500 shadow-md"
+                  : "bg-muted text-muted-foreground border-border hover:border-indigo-500/50 hover:text-foreground"
+              }`}
+            >
+              <Icon className="w-4 h-4" />{label}
+            </button>
+          ))}
+        </div>
+      </section>
+
       {/* ── Account Actions ── */}
-      <section className="bg-card border border-white/8 rounded-2xl p-6 space-y-4">
+      <section className="bg-card border border-border rounded-2xl p-6 space-y-4">
         <h3 className="font-semibold">Account</h3>
         <div className="flex flex-col sm:flex-row gap-3">
           <button
             onClick={() => signOut({ callbackUrl: "/login" })}
-            className="flex items-center gap-2 px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-sm font-medium transition-all"
+            className="flex items-center gap-2 px-5 py-2.5 bg-muted hover:bg-accent border border-border rounded-xl text-sm font-medium transition-all"
           >
             <LogOut className="w-4 h-4" />
             Sign Out
@@ -179,7 +210,7 @@ export default function SettingsPage() {
 
 function Stat({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
-    <div className="flex flex-col items-center justify-center bg-white/5 rounded-xl py-4 px-2 gap-1">
+    <div className="flex flex-col items-center justify-center bg-muted rounded-xl py-4 px-2 gap-1">
       <div className="flex items-center gap-1.5 text-muted-foreground text-xs">{icon} {label}</div>
       <span className="text-2xl font-black">{value}</span>
     </div>
@@ -188,7 +219,7 @@ function Stat({ icon, label, value }: { icon: React.ReactNode; label: string; va
 
 function MiniStat({ icon, label }: { icon: string; label: string }) {
   return (
-    <div className="flex flex-col items-center gap-1 bg-white/5 rounded-xl py-4">
+    <div className="flex flex-col items-center gap-1 bg-muted rounded-xl py-4">
       <span className="text-2xl">{icon}</span>
       <span className="text-sm text-muted-foreground">{label}</span>
     </div>

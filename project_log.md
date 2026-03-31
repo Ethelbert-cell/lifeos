@@ -2,6 +2,69 @@
 
 ---
 
+### [2026-03-31 19:57]
+**Task:** > Fix globals.css IDE warnings (@tailwind/@apply). Execute Phase 2 — Gym Features + Character Development.
+
+**Changes:**
+* `.vscode/settings.json` (new): Disables VS Code's built-in CSS validator (`css.validate: false`) which emits false-positive `Unknown at rule @tailwind/apply` errors. These are PostCSS directives that Next.js/PostCSS handles correctly at build time — the IDE simply doesn't know about them. Also configures Tailwind IntelliSense class regex for `cn()` calls.
+* `src/models/GymLog.ts` (new): Mongoose schema — `userId, date, workoutType, title, duration, exercises[], xpAwarded, notes`. Compound index `{ userId, date: -1 }`.
+* `src/models/Instructor.ts` (new): Mongoose schema — `name, specialties[], bio, rating, reviewCount, experience, certifications[], schedule[{ day, slots[] }], isAvailable, contactEmail`.
+* `src/models/Achievement.ts` (new): Mongoose schema — `userId, achievementId, title, description, icon, category, xpReward, unlockedAt`. Unique compound index `{ userId, achievementId }` prevents duplicate grants.
+* `src/app/api/gym/route.ts` (new): GET (logs + streak), POST (log workout, award +25 XP via `$inc`, +50 bonus on 7-day gym streak, deduplication: only first workout per day awards XP), DELETE (remove log, revert XP).
+* `src/app/api/gym/instructors/route.ts` (new): GET (all available instructors sorted by rating), POST (create instructor).
+* `src/app/api/achievements/route.ts` (new): GET (user's unlocked achievements, sorted by unlockedAt desc).
+* `src/app/dashboard/gym/page.tsx` (new): Full Gym Tracker — spring-animated log-workout modal with exercise builder, 7-day activity grid, streak banner with XP bonus countdown, 4-stat summary, instructor CTA card, delete-on-hover log list.
+* `src/app/dashboard/gym/instructor/page.tsx` (new): Instructor directory — star ratings, specialty filter pills, schedule display, book session CTA, demo data fallback when DB is empty.
+* `src/app/dashboard/character/page.tsx` (new): Character sheet — gradient tier card (Novice→Mythic), animated XP bar, RPG stat bars (Productivity, Consistency, Goal Power, Total XP), achievement grid with live data derivation + category filters, 17 total achievements.
+* `src/app/dashboard/gym/loading.tsx` + `error.tsx` (new): Skeleton + error boundary (GEMINI.md §5).
+* `src/app/dashboard/character/loading.tsx` + `error.tsx` (new): Skeleton + error boundary (GEMINI.md §5).
+
+**Logic/Math:** GYM_XP = 25 per workout (first log per day only). GYM_STREAK_BONUS = 50 when ≥7 unique workout days in past 7. All XP via Mongoose `$inc` (atomic, per §3). Achievements derived live from task/habit/goal/XP data — no stale values.
+
+**Testing:** ✅ `npx tsc --noEmit` — zero `src/` errors. `npx vitest run` — 34/34 passing.
+
+**Phase Progress:** Phase 2 (Gym + Character) — **Complete**. Analytics chart polish (P2.1) pending if desired.
+
+---
+
+### [2026-03-31 19:44]
+**Task:** > Bugfix: Resolve Vitest `Plugin<any>` type error and React hydration crash (`Hydration failed because the initial UI does not match what was rendered on the server`).
+
+**Changes:**
+* `vitest.config.ts` (mod): Added `/// <reference types="vitest" />` triple-slash directive and cast `react()` plugin as `any`. Root cause: Vitest bundles its own internal copy of Vite, producing a `Plugin<any>` type that is structurally incompatible with the top-level `vite` package's `Plugin<any>`. The cast is safe — the plugin operates identically at runtime.
+* `src/components/layout/Sidebar.tsx` (mod): Added `useState(false)` + `useEffect(() => setMounted(true), [])` guard. Without it, `next-themes` returns `theme = undefined` on the server but the actual theme string on the client. The `{theme === "dark" ? <Sun/> : <Moon/>}` conditional produced different component trees server-vs-client, crashing React hydration. The icon now renders only after `mounted = true`.
+* `src/components/layout/MobileDrawer.tsx` (mod): Applied the same `mounted` guard to the theme toggle icon in the drawer footer.
+* `src/app/dashboard/settings/page.tsx` (mod): Applied the same `mounted` guard to the active-button highlight on the Light / Dark / System appearance buttons. Also replaced residual `bg-white/5` with `bg-muted` on inactive buttons.
+
+**Logic/Math:** No XP logic changed.
+
+**Testing:** ✅ PASS — `npx tsc --noEmit` zero errors in `src/`. `npx vitest run` 34/34 tests passing. Vitest TS error fully resolved.
+
+**Phase Progress:** Phase 1 (Core Fixes & UI) — **All bugs resolved**. Phase 2 pending user approval.
+
+---
+
+### [2026-03-31 19:14]
+**Task:** > Phase 1 — Core Fixes & UI Improvements: Mobile Navigation Redesign + Light/Dark Mode fixes.
+
+**Changes:**
+* `src/app/globals.css` (mod): Moved `@import` Google Fonts URL to line 1 — before `@tailwind` directives. CSS spec requires `@import` to precede all other rules; PostCSS was silently discarding the import, causing Inter to never load.
+* `src/components/ui/Providers.tsx` (mod): Replaced hardcoded dark-only `react-hot-toast` inline styles with CSS variable references (`hsl(var(--card))`, `hsl(var(--card-foreground))`, `hsl(var(--border))`, `hsl(var(--primary))`). Extracted into a `ThemedToaster` sub-component so it re-renders on theme change.
+* `src/components/layout/Sidebar.tsx` (rewrite): Replaced all `border-white/5`, `bg-white/5`, `text-white` opacity classes with semantic Tailwind tokens (`border-border`, `bg-muted`, `bg-accent`, `bg-card`). Added grouped nav sections ("Productivity" / "Fitness & Growth" / "Settings") with `NavGroup` sub-component. Added Framer Motion `layoutId="sidebar-active-pill"` animated highlight. Added a theme toggle button and a sign-out icon in the user footer. Added new nav items: Gym Tracker (`/dashboard/gym`) and Character (`/dashboard/character`).
+* `src/components/layout/MobileDrawer.tsx` (rewrite): Replaced CSS-class-based slide animation with Framer Motion `AnimatePresence` + `motion.div` spring transition. Replaced all `border-white/10`, `bg-white/5` opacity classes with semantic tokens (`border-border`, `bg-muted`, `bg-background`). Added the same "Productivity / Fitness & Growth / Account" grouping with a `NavSection` sub-component + Framer Motion `layoutId="drawer-active-pill"`. Added Gym Tracker and Character routes.
+* `src/components/layout/MobileNav.tsx` (deleted): Was dead code — never imported or mounted anywhere in the codebase. The active mobile pattern is exclusively the `MobileDrawer`.
+* `src/components/layout/TopBar.tsx` (mod): Added `PAGE_NAMES` entries for `/dashboard/gym`, `/dashboard/gym/instructor`, `/dashboard/character`. Added `MobileXPStrip` sub-component — a 2px tall gradient progress bar rendered only on mobile (`md:hidden`) beneath the header, showing the user's current XP level progress at a glance. Switched header from `h-16 flex` to a flex column to accommodate the strip.
+* `src/app/dashboard/settings/page.tsx` (mod): Replaced all `border-white/8` and `bg-white/5` with `border-border` and `bg-muted` across all 6 section cards, XP progress bar track, Stat and MiniStat helper components, and the Sign Out button.
+* `src/app/dashboard/page.tsx` (mod): Replaced `border-white/5`, `border-white/10`, `bg-background/50` in all action-link cards and the StatCard component with semantic tokens.
+
+**Logic/Math:** No XP or gamification logic changed. All changes are purely UI/styling.
+
+**Testing:** ✅ PASS — `npx vitest run` 34/34 tests passing. `npx tsc --noEmit` reports zero errors in `src/` (5 pre-existing errors in `.next/types/` stale cache and `vitest.config.ts` version mismatch — both unrelated to this session's changes).
+
+**Phase Progress:** Phase 1 (Core Fixes & UI) — **100% Complete**. Pending manual verification by user (dark/light toggle, mobile drawer). Phase 2 (Data Visualisation, Gym, Character) next on approval.
+
+---
+
 ### [2026-03-28 12:15]
 **Task:** > Complete Phase 3 Frontend UX/UI & State Layer. Replaced broken boilerplate homepage with a styled landing page. Handled App Shell layout, Zustand stores, and full Component UI build for all 4 features.
 
