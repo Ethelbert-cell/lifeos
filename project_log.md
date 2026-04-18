@@ -2,6 +2,26 @@
 
 ---
 
+### [2026-04-18 09:25]
+**Task:** > Phase 4: Implement Progressive Web App (PWA) functionality and expand Analytics system.
+
+**Changes:**
+* `package.json`: Injected `@serwist/next` and `serwist` backend PWA caching dependencies.
+* `next.config.mjs`: Rewrote config module to wrap with `withSerwistInit` (service worker automatic code generation).
+* `src/app/sw.ts` (new): Baseline Service Worker definition bridging Next.js runtime paths.
+* `src/app/layout.tsx`: Replaced hardcoded manifest string with strictly typed Apple PWA meta tags (`appleWebApp`, `statusBarStyle: "black-translucent"`).
+* `src/app/api/analytics/route.ts`: Integrated `GymLog` models into the 14-Day rolling calculation aggregation. Dynamically appending `gym` count into the `DayData` dictionary.
+* `src/app/dashboard/analytics/page.tsx`: Added `Gym` label element to the Heatmap/Chart legend.
+* `src/components/analytics/ComparisonBarChart.tsx`: Appended `<Bar dataKey="Gym">` to the stacked UI visualization using a distinct Amber color.
+
+**Logic/Math:** `Promise.all` backend aggregations updated to run `GymLog` async queries concurrently with `Habit`/`Task` fetching. Time complexities map evenly `O(N)` where N is operations over a bound 14-day array.
+
+**Testing:** Pending `npm install` post-dependency injection and manual Lighthouse checks.
+
+**Phase Progress:** Phase 4 — (PWA Integration & Analytics Expansion) **Code Complete**.
+
+---
+
 ### [2026-03-31 20:30]
 **Task:** > Remove Gym Instructor feature, fix Mobile layouts (Tasks, Habit icon), and Redesign Gym Tracker to use Routine templates.
 

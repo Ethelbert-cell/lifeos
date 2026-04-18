@@ -10,6 +10,7 @@ interface DayData {
   tasks: number;
   habits: number;
   notes: number;
+  gym: number;
   total: number;
 }
 
@@ -28,6 +29,7 @@ export function ComparisonBarChart({ data }: ComparisonBarChartProps) {
     Tasks:  d.tasks,
     Habits: d.habits,
     Notes:  d.notes,
+    Gym:    d.gym,
   }));
 
   return (
@@ -66,7 +68,8 @@ export function ComparisonBarChart({ data }: ComparisonBarChartProps) {
         />
         <Bar dataKey="Tasks"  stackId="a" fill="#818cf8" radius={[0, 0, 0, 0]} />
         <Bar dataKey="Habits" stackId="a" fill="#34d399" radius={[0, 0, 0, 0]} />
-        <Bar dataKey="Notes"  stackId="a" fill="#38bdf8" radius={[4, 4, 0, 0]} />
+        <Bar dataKey="Notes"  stackId="a" fill="#38bdf8" radius={[0, 0, 0, 0]} />
+        <Bar dataKey="Gym"    stackId="a" fill="#fbbf24" radius={[4, 4, 0, 0]} />
       </BarChart>
     </ResponsiveContainer>
   );

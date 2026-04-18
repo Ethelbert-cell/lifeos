@@ -34,16 +34,17 @@ export async function GET() {
     const since = new Date(days[0]);
 
     // Fetch items created/completed in the last 14 days
-    const [tasks, habits, notes] = await Promise.all([
+    const [tasks, habits, notes, gymLogs] = await Promise.all([
       Task.find({ userId, status: 'done', updatedAt: { $gte: since } }).select('updatedAt').lean(),
       Habit.find({ userId }).select('completionLogs').lean(),
       Note.find({ userId, createdAt: { $gte: since } }).select('createdAt').lean(),
+      import('@/models/GymLog').then(m => m.GymLog.find({ userId, date: { $gte: since } }).select('date').lean()),
     ]);
 
     // Build per-day map
-    type DayData = { date: string; tasks: number; habits: number; notes: number; total: number };
+    type DayData = { date: string; tasks: number; habits: number; notes: number; gym: number; total: number };
     const map = new Map<string, DayData>();
-    days.forEach(d => map.set(d, { date: d, tasks: 0, habits: 0, notes: 0, total: 0 }));
+    days.forEach(d => map.set(d, { date: d, tasks: 0, habits: 0, notes: 0, gym: 0, total: 0 }));
 
     tasks.forEach((t: any) => {
       const key = toDateKey(t.updatedAt);
@@ -63,6 +64,12 @@ export async function GET() {
       const key = toDateKey(n.createdAt);
       const entry = map.get(key);
       if (entry) { entry.notes++; entry.total++; }
+    });
+
+    gymLogs.forEach((g: any) => {
+      const key = toDateKey(g.date);
+      const entry = map.get(key);
+      if (entry) { entry.gym++; entry.total++; }
     });
 
     const data = Array.from(map.values());

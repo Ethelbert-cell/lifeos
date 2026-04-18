@@ -149,6 +149,7 @@ export default function AnalyticsPage() {
           <span className="inline-block w-2 h-2 rounded-sm bg-indigo-400 mr-1" />Tasks
           <span className="inline-block w-2 h-2 rounded-sm bg-emerald-400 mx-1 ml-3" />Habits
           <span className="inline-block w-2 h-2 rounded-sm bg-sky-400 mx-1 ml-3" />Notes
+          <span className="inline-block w-2 h-2 rounded-sm bg-amber-400 mx-1 ml-3" />Gym
         </p>
         <ComparisonBarChart data={data.daily} />
       </div>

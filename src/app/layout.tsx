@@ -24,7 +24,14 @@ export const metadata: Metadata = {
     description: 'Earn XP, level up, and hit your goals with LifeOS.',
     images: [{ url: '/og-image.png', width: 1200, height: 630 }],
   },
-  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "LifeOS",
+  },
+  formatDetection: {
+    telephone: false,
+  },
 };
 
 export const viewport = {

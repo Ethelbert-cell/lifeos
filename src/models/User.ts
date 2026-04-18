@@ -23,8 +23,6 @@ const UserSchema = new Schema<IUser>(
   { timestamps: true }
 );
 
-// Index for fast per-user lookups
-UserSchema.index({ email: 1 });
 
 // Never export a new model if one already exists (serverless hot-reload safety)
 const User: Model<IUser> =
