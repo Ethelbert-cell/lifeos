@@ -2,6 +2,28 @@
 
 ---
 
+### [2026-03-31 20:30]
+**Task:** > Remove Gym Instructor feature, fix Mobile layouts (Tasks, Habit icon), and Redesign Gym Tracker to use Routine templates.
+
+**Changes:**
+* `src/components/tasks/KanbanBoard.tsx`: Applied horizontal snap-scrolling to columns on mobile (`flex overflow-x-auto snap-x snap-mandatory`), ensuring columns take up 85vw width rather than stacking infinitely downward.
+* `src/components/habits/HabitCard.tsx`: Modifed Delete button CSS (`text-rose-500/0` -> `text-muted-foreground/40`) to ensure it is always visible on touch devices lacking hover states.
+* `src/models/Instructor.ts` / `/api/gym/instructors` / `/dashboard/gym/instructor` (deleted): Completely nuked from codebase. Removed navigation links across `Sidebar.tsx`, `MobileDrawer.tsx`, `TopBar.tsx`, and CTA inside Gym.
+* `src/models/GymRoutine.ts` (new): Mongoose schema — `userId, name, icon, color, workoutType, targetDaysPerWeek, templateExercises[], streak`.
+* `src/models/GymLog.ts` (modified): Added `routineId` string field, indexed heavily.
+* `src/app/api/gym/routines/route.ts` (new): GET, POST, DELETE API for reusable workout templates.
+* `src/store/useGymStore.ts` (new): Unified Zustand store caching `routines` and `logs` while abstracting API calls (`fetchData`, `logWorkout`).
+* `src/components/gym/RoutineModal.tsx` & `LogRoutineModal.tsx` (new): Reusable, beautifully animated layout modals. 
+* `src/app/dashboard/gym/page.tsx` (modified): Totally redesigned. Now acts identically to Habits tracking. Users build reusable "Routines" (cards with checkmarks). Tapping a card opens a pre-filled Log Modal so they can just hit "Submit", saving massive amounts of friction.
+
+**Logic/Math:** GymLog now derives relationships and dynamically fetches routine details to present visual grid. The `.next/` cache was cleared resolving ghost-module TS errors. XP awards map dynamically via Zustand fetchers.
+
+**Testing:** ✅ `npx tsc --noEmit` — 0 errors (post cache wipe).
+
+**Phase Progress:** Phase 3 — (Feature Pivot & Mobile UX Fixes) **Complete**.
+
+---
+
 ### [2026-03-31 19:57]
 **Task:** > Fix globals.css IDE warnings (@tailwind/@apply). Execute Phase 2 — Gym Features + Character Development.
 

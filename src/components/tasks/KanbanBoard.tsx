@@ -98,12 +98,12 @@ export function KanbanBoard({ onEditTask, onNewTask }: KanbanBoardProps) {
 
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start h-full">
+      <div className="flex overflow-x-auto snap-x snap-mandatory pb-4 md:grid md:grid-cols-3 gap-6 items-start h-full no-scrollbar">
         {COLUMNS.map((col) => {
           const colTasks = tasks.filter((t) => t.status === col.id).sort((a, b) => a.order - b.order);
           
           return (
-            <div key={col.id} className="flex flex-col gap-4 bg-white/5 p-4 rounded-2xl min-h-[500px]">
+            <div key={col.id} className="flex flex-col gap-4 bg-muted/50 border border-border p-4 rounded-2xl min-h-[500px] min-w-[85vw] snap-center md:min-w-0">
               <div className="flex items-center justify-between mb-2">
                 <h3 className="font-semibold text-lg flex items-center gap-2">
                   {col.title}

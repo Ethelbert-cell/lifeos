@@ -16,6 +16,7 @@ export interface IGymLog extends Document {
   }[];
   xpAwarded: number;
   notes?: string;
+  routineId?: string;
 }
 
 const ExerciseSchema = new Schema({
@@ -41,6 +42,7 @@ const GymLogSchema = new Schema<IGymLog>(
     exercises:   { type: [ExerciseSchema], default: [] },
     xpAwarded:   { type: Number, default: 25 },
     notes:       { type: String, trim: true },
+    routineId:   { type: String, index: true },
   },
   { timestamps: true }
 );

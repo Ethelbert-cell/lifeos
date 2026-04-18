@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { connectDB } from "@/lib/db";
 import { GymLog } from "@/models/GymLog";
+import { GymRoutine } from "@/models/GymRoutine";
 import User from "@/models/User";
 
 const GYM_XP = 25;
@@ -57,7 +58,7 @@ export async function POST(req: Request) {
   await connectDB();
 
   const body = await req.json();
-  const { title, workoutType, duration, exercises = [], notes, date } = body;
+  const { title, workoutType, duration, exercises = [], notes, date, routineId } = body;
 
   if (!title?.trim() || !duration || duration < 1) {
     return NextResponse.json({ error: "title and duration (≥1 min) are required" }, { status: 400 });
@@ -71,6 +72,8 @@ export async function POST(req: Request) {
     date: { $gte: todayStart },
   });
 
+  const exactDate = date ? new Date(date) : new Date();
+
   const log = await GymLog.create({
     userId:      session.user.id,
     title:       title.trim(),
@@ -78,9 +81,14 @@ export async function POST(req: Request) {
     duration,
     exercises,
     notes:       notes?.trim(),
-    date:        date ? new Date(date) : new Date(),
+    date:        exactDate,
     xpAwarded:   GYM_XP,
+    routineId,
   });
+
+  if (routineId) {
+    await GymRoutine.findByIdAndUpdate(routineId, { lastCompleted: exactDate });
+  }
 
   // Award XP — only for the first workout logged today to prevent farming
   let xpGained = 0;

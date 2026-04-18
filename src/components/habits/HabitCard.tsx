@@ -43,7 +43,7 @@ export function HabitCard({ habit, onCheckIn, onDelete }: HabitCardProps) {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       layout
-      className="relative group bg-card border border-white/10 rounded-2xl p-5 overflow-hidden shadow-sm hover:shadow-md transition-shadow flex items-center justify-between gap-4"
+      className="relative group bg-card border border-border rounded-2xl p-5 overflow-hidden shadow-sm hover:shadow-md transition-shadow flex items-center justify-between gap-4"
     >
       {/* Subtle Background Glow if accomplished today */}
       {checkedInToday && (
@@ -85,7 +85,7 @@ export function HabitCard({ habit, onCheckIn, onDelete }: HabitCardProps) {
         {!checkedInToday && (
           <button
             onClick={() => onDelete(String(habit._id))}
-            className="p-2 text-rose-500/0 hover:text-rose-500 group-hover:text-rose-500/50 hover:bg-rose-500/10 rounded-full transition-all"
+            className="p-2 text-muted-foreground/40 hover:text-rose-500 group-hover:text-rose-500/50 hover:bg-rose-500/10 rounded-full transition-all"
           >
             <Trash2 className="w-4 h-4" />
           </button>

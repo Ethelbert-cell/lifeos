@@ -18,7 +18,6 @@ const PAGE_NAMES: Record<string, string> = {
   "/dashboard/analytics":   "Analytics",
   "/dashboard/settings":    "Settings",
   "/dashboard/gym":         "Gym Tracker",
-  "/dashboard/gym/instructor": "Instructors",
   "/dashboard/character":   "Character",
 };
 
