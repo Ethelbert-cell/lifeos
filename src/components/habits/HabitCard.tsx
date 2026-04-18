@@ -7,6 +7,7 @@ import { IHabit } from "@/models/Habit";
 import { isToday } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import toast from "react-hot-toast";
+import confetti from "canvas-confetti";
 import { useHabitStore } from "@/store/useHabitStore";
 import { useUserStore } from "@/store/useUserStore";
 
@@ -31,6 +32,15 @@ export function HabitCard({ habit, onCheckIn, onDelete }: HabitCardProps) {
     setIsCheckingIn(true);
     try {
       await onCheckIn(String(habit._id));
+      
+      // Fire confetti from the center of the screen
+      confetti({
+        particleCount: 150,
+        spread: 80,
+        origin: { y: 0.6 },
+        colors: [hexColor, '#ffffff', '#fbbf24']
+      });
+
     } catch (err: any) {
       toast.error(err.message || "Failed to check in");
     } finally {

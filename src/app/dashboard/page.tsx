@@ -41,6 +41,12 @@ export default function DashboardIndex() {
      return lastDate.toDateString() === today.toDateString();
   }).length;
 
+  const pendingHabitsToday = habits.filter(h => {
+     if (!h.completionLogs || h.completionLogs.length === 0) return true;
+     const lastDate = new Date(h.completionLogs[h.completionLogs.length - 1]);
+     return lastDate.toDateString() !== new Date().toDateString();
+  });
+
   const totalNotes = notes.length;
   
   const activeGoals = goals.filter(g => g.status === 'active').length;
@@ -72,11 +78,24 @@ export default function DashboardIndex() {
          </div>
        )}
 
-       {/* Today's Focus — top 3 pending tasks */}
-       {tasks.filter(t => t.status !== 'done').length > 0 && (
+       {/* Today's Focus — top pending tasks and habits */}
+       {(tasks.filter(t => t.status !== 'done').length > 0 || pendingHabitsToday.length > 0) && (
          <div className="space-y-3">
            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Today's Focus</h2>
            <div className="space-y-2">
+             
+             {/* Render habits first because they form the daily streak baseline */}
+             {pendingHabitsToday.slice(0, 2).map(habit => (
+                 <div key={String(habit._id)} className="flex items-center gap-3 px-4 py-3 bg-card border border-border rounded-xl hover:border-emerald-500/30 transition-colors group">
+                   <div className="w-2 h-2 rounded-full shrink-0 bg-emerald-400" />
+                   <p className="text-sm font-medium flex-1 truncate">{habit.name}</p>
+                   <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-sm flex items-center gap-1">
+                      <Flame className="w-3 h-3" /> Habit
+                   </span>
+                 </div>
+             ))}
+
+             {/* Render high priority tasks */}
              {tasks
                .filter(t => t.status !== 'done')
                .sort((a, b) => {
@@ -92,11 +111,11 @@ export default function DashboardIndex() {
                      'bg-slate-400': task.priority === 'low',
                    })} />
                    <p className="text-sm font-medium flex-1 truncate">{task.title}</p>
-                   <span className={cn("text-[10px] font-semibold px-2 py-0.5 rounded-full", {
-                     'bg-rose-500/10 text-rose-400': task.priority === 'high',
-                     'bg-amber-500/10 text-amber-400': task.priority === 'medium',
-                     'bg-slate-500/10 text-slate-400': task.priority === 'low',
-                   })}>{task.priority}</span>
+                   <span className={cn("text-[10px] font-semibold px-2 py-0.5 rounded-full border shadow-sm", {
+                     'bg-rose-500/10 text-rose-400 border-rose-500/20': task.priority === 'high',
+                     'bg-amber-500/10 text-amber-400 border-amber-500/20': task.priority === 'medium',
+                     'bg-slate-500/10 text-slate-400 border-slate-500/20': task.priority === 'low',
+                   })}>{task.priority} task</span>
                  </div>
              ))}
            </div>

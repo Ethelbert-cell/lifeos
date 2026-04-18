@@ -2,6 +2,41 @@
 
 ---
 
+### [2026-04-18 10:09]
+**Task:** > Phase 6: Silicon Valley UX Polish (Command Menu & Gamification FX).
+
+**Changes:**
+* `package.json`: Injected `cmdk` for unstyled command palette primitives.
+* `src/components/ui/CommandMenu.tsx` (new): Built a global modal listening to `Cmd+K` keyboard events for instant route jumps (Kanban, Gym, Habits) and sign-out logic without mouse interaction.
+* `src/app/layout.tsx`: Mounted the `<CommandMenu />` gracefully within the root provider layer for global access.
+* `src/components/habits/HabitCard.tsx`: Wired `canvas-confetti` logic into the `onCheckIn` promise completion handler to fire visual dopamine particles from `{y: 0.6}` screen origin.
+* `src/app/dashboard/page.tsx`: Re-engineered "Today's Focus" list. It now filters `Habits` array for items where `lastDate.toDateString() !== today`, mapping them alongside High/Medium priority tasks for a single aggressive hit-list representation.
+
+**Logic/Math:** `Habit` filtering requires date string parity comparisons to omit habits already checked in globally today, bypassing the need for redundant API calls on the frontend layer.
+
+**Testing:** Requires `npm install` post-cmdk injection. Visual verification on `localhost:3000`.
+
+**Phase Progress:** Phase 6 — (UX Polish) **Complete**.
+
+---
+
+### [2026-04-18 09:56]
+**Task:** > Overhaul Landing Page (`/`) into a premium SaaS conversion funnel.
+
+**Changes:**
+* `src/app/page.tsx` (modified): Rewritten entirely as a client component (`"use client"`) to support deep `framer-motion` scroll and entrance animations.
+* Built a custom CSS isometric replica of the Dashboard Character UI directly into the Hero Section (Paladin level badge with bouncing XP notifications).
+* Expanded Features Grid from 3 generic items to 6 detailed items matching exact app capabilities (Tasks, Habits, Goals, Gym, Analytics, RPG Levels) with animated staggered loading parameters.
+* Added a functional React FAQ Accordion block mapping to generic SaaS questions (Pricing, PWA, XP logic).
+
+**Logic/Math:** `framer-motion` stagger container delays set dynamically mapping indices to `0.1s` iteration intervals for visual cascading.
+
+**Testing:** Visual manual verification on `localhost:3000` assuming standard dev compilation. 
+
+**Phase Progress:** Phase 5 — (Landing Page) **Complete**.
+
+---
+
 ### [2026-04-18 09:25]
 **Task:** > Phase 4: Implement Progressive Web App (PWA) functionality and expand Analytics system.
 

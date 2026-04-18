@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { Providers } from '@/components/ui/Providers';
+import { CommandMenu } from '@/components/ui/CommandMenu';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -49,7 +50,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans antialiased bg-background`}>
-        <Providers>{children}</Providers>
+        <Providers>
+          <CommandMenu />
+          {children}
+        </Providers>
       </body>
     </html>
   );
