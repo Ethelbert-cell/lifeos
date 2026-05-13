@@ -1,36 +1,108 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌟 LifeOS – Gamified Productivity Dashboard
 
-## Getting Started
+LifeOS is an elite, full-stack productivity web application designed to transform your daily routine into a highly engaging, RPG-style experience. Manage tasks, build habits, capture notes, and track long-term goals while earning XP and leveling up.
 
-First, run the development server:
+![LifeOS Dashboard](./public/Dashboard.png)
+
+---
+
+## 🚀 Features
+
+- 🎮 **Gamification Engine:** Earn XP for completing tasks and maintaining habit streaks. Dynamically level up your character based on a mathematically balanced XP formula.
+- 📋 **Kanban Task Management:** Drag-and-drop task organization with `@hello-pangea/dnd`.
+- 🔄 **Habit Tracker:** Build and track 28-day habits, complete with check-in dopamine hits (confetti animations).
+- 📝 **Rich Text Notes:** Notion-style rich text editor using `@tiptap/react`.
+- 🎯 **Goal Milestones:** Interactive multi-step goal tracking.
+- 📊 **Analytics & Heatmaps:** Visualize your productivity over time with interactive charts using `recharts`.
+- ⌨️ **Command Menu:** Global `Cmd+K` navigation for instant, frictionless route jumping.
+- 📱 **PWA Support:** Installable as a Progressive Web App (PWA) with offline-caching powered by `serwist`.
+- 🌙 **Modern UI/UX:** Silicon Valley-grade polish with `framer-motion` animations, dark/light modes, and a stunning dashboard interface.
+
+---
+
+## 🛠️ Tech Stack
+
+**Frontend & Framework:**
+- **Framework:** Next.js 14 (App Router)
+- **Language:** TypeScript 5
+- **Styling:** Tailwind CSS 3 + `framer-motion` for micro-animations
+- **State Management:** `zustand` (Global Stores)
+- **Icons & UI Primitives:** `lucide-react`, `cmdk`, `clsx`, `tailwind-merge`
+
+**Backend & Database:**
+- **Database:** MongoDB Atlas + Mongoose 8
+- **Authentication:** NextAuth.js (Google OAuth & JWT Strategy)
+- **Password Hashing:** `bcryptjs`
+
+**Testing & QA:**
+- **Unit Testing:** Vitest & React Testing Library
+- **Linting:** ESLint + Prettier
+
+---
+
+## 🧪 Environment Variables
+
+Create a `.env.local` file at the root of the project with the following variables:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# ─── NextAuth ──────────────────────────────
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=<your_secure_random_string>
+
+# ─── Google OAuth ──────────────────────────
+GOOGLE_CLIENT_ID=<your_google_client_id>
+GOOGLE_CLIENT_SECRET=<your_google_client_secret>
+
+# ─── MongoDB Atlas ─────────────────────────
+MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/lifeos?retryWrites=true&w=majority
+
+# ─── Public App URL ────────────────────────
+NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🚀 Getting Started
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Clone the repository**
+   ```bash
+   git clone <your-repo-url>
+   cd lifeos
+   ```
 
-## Learn More
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+3. **Run the development server**
+   ```bash
+   npm run dev
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. **Open the App**
+   Navigate to [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 📸 Screenshots
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Dashboard Overview
+![Dashboard Overview](./public/Dashboard.png)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Habit Tracker
+![Habit Tracker](./public/Habit.png)
+
+### Gym Tracker
+![Gym Tracker](./public/Gym%20Tracker.png)
+
+### Analytics
+![Analytics](./public/Analytics.png)
+
+---
+
+## 🤝 Contributing
+Contributions, issues, and feature requests are welcome!
+
+## 📝 License
+This project is [ISC](https://opensource.org/licenses/ISC) licensed.
